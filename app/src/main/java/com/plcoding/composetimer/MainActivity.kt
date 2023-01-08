@@ -78,9 +78,11 @@ fun Timer(
     }
     LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
         if(currentTime > 0 && isTimerRunning) {
-            delay(100L)
-            currentTime -= 100L
+            delay(1000L)
+            currentTime -= 1000L
             value = currentTime / totalTime.toFloat()
+        }else if (currentTime == 0L){
+            isTimerRunning = false
         }
     }
     Box(
@@ -126,14 +128,12 @@ fun Timer(
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
-        Button(
+       Button(
             onClick = {
-                      if(currentTime <= 0L) {
+                      if(currentTime == 0L) {
                           currentTime = totalTime
-                          isTimerRunning = true
-                      } else {
-                          isTimerRunning = !isTimerRunning
-                      }
+                          value = 1f
+                      } else isTimerRunning = (currentTime == totalTime) || !isTimerRunning
             },
             modifier = Modifier.align(Alignment.BottomCenter),
             colors = ButtonDefaults.buttonColors(
@@ -146,8 +146,9 @@ fun Timer(
         ) {
             Text(
                 text = if (isTimerRunning && currentTime >= 0L) "Stop"
-                else if (!isTimerRunning && currentTime >= 0L) "Start"
-                else "Restart"
+                else if (!isTimerRunning && currentTime > 0L) "Start"
+                else if (currentTime == 0L && !isTimerRunning) "Restart" else ""
+
             )
         }
     }
